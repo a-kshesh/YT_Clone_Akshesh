@@ -1,7 +1,10 @@
+name: Firebase Deployment
+
 on:
   push:
     branches:
-      - master
+      - main
+
 jobs:
   deploy:
     name: Build & Deployment
@@ -18,12 +21,13 @@ jobs:
 
       - name: install node packages
         run: npm i
-      - name: build
-        run: npm run build
-          env:
-            CI: false
 
-      - name: deploy a firebase
+      - name: Build
+        run: npm run build
+        env:
+          CI: false
+
+      - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting
