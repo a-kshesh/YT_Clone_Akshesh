@@ -1,22 +1,35 @@
-name: Deploy to firebase
+name: Firebase Deployment
 
 on:
-  release:
-    types:
-      - published
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
+    name: Build & Deployment
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-      - name: Setup the code
-        run: npm install
-      - name: Test the code
-        run: npm test
-      - name: Deploy to Firebase
-        uses: mohammed-atif/firebase-publish-react@v1.0
+      - name: get the source code
+        uses: actions/checkout@v2
+
+      - name: install node
+        uses: actions/setup-node@v2
         with:
-          firebase-token: ${{ secrets.FIREBASE_TOKEN }}
+          node-version: '12'
+
+      - name: install node packages
+        run: npm i
+
+      - name: Build
+        run: npm run build
+        env:
+          CI: false
+
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{secrets.FIREBASE_TOKEN}}
