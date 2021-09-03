@@ -13,67 +13,65 @@ import { useSelector } from 'react-redux'
 import WatchScreen from './screens/watchScreen/WatchScreen'
 import SearchScreen from './screens/searchScreen/SearchScreen'
 
+require('dotenv').config()
 const Layout = ({ children }) => {
-   const [sidebar, toggleSidebar] = useState(false)
+  const [sidebar, toggleSidebar] = useState(false)
 
-   const handleToggleSidebar = () => toggleSidebar(value => !value)
+  const handleToggleSidebar = () => toggleSidebar((value) => !value)
 
-   return (
-      <>
-         <Header handleToggleSidebar={handleToggleSidebar} />
-         <div className='app__container'>
-            <Sidebar
-               sidebar={sidebar}
-               handleToggleSidebar={handleToggleSidebar}
-            />
-            <Container fluid className='app__main '>
-               {children}
-            </Container>
-         </div>
-      </>
-   )
+  return (
+    <>
+      <Header handleToggleSidebar={handleToggleSidebar} />
+      <div className='app__container'>
+        <Sidebar sidebar={sidebar} handleToggleSidebar={handleToggleSidebar} />
+        <Container fluid className='app__main '>
+          {children}
+        </Container>
+      </div>
+    </>
+  )
 }
 
 const App = () => {
-   const { accessToken, loading } = useSelector(state => state.auth)
+  const { accessToken, loading } = useSelector((state) => state.auth)
 
-   const history = useHistory()
+  const history = useHistory()
 
-   useEffect(() => {
-      if (!loading && !accessToken) {
-         history.push('/auth')
-      }
-   }, [accessToken, loading, history])
+  useEffect(() => {
+    if (!loading && !accessToken) {
+      history.push('/auth')
+    }
+  }, [accessToken, loading, history])
 
-   return (
-      <Switch>
-         <Route path='/' exact>
-            <Layout>
-               <HomeScreen />
-            </Layout>
-         </Route>
+  return (
+    <Switch>
+      <Route path='/' exact>
+        <Layout>
+          <HomeScreen />
+        </Layout>
+      </Route>
 
-         <Route path='/auth'>
-            <LoginScreen />
-         </Route>
+      <Route path='/auth'>
+        <LoginScreen />
+      </Route>
 
-         <Route path='/search/:query'>
-            <Layout>
-               <SearchScreen/>
-            </Layout>
-         </Route>
+      <Route path='/search/:query'>
+        <Layout>
+          <SearchScreen />
+        </Layout>
+      </Route>
 
-         <Route path='/watch/:id'>
-            <Layout>
-               <WatchScreen/>
-            </Layout>
-         </Route>
+      <Route path='/watch/:id'>
+        <Layout>
+          <WatchScreen />
+        </Layout>
+      </Route>
 
-         <Route>
-            <Redirect to='/' />
-         </Route>
-      </Switch>
-   )
+      <Route>
+        <Redirect to='/' />
+      </Route>
+    </Switch>
+  )
 }
 
 export default App
